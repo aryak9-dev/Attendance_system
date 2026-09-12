@@ -619,3 +619,154 @@ The current schema is intentionally simple. If the project grows, we can later a
 - Audit logs
 
 These are **not required for the first version**.
+
+
+# Getting the Seeded Data Locally
+
+## Get the Database Locally
+
+After cloning the project, make sure PostgreSQL is installed and `psql` is available in the terminal.
+
+From the project root directory, run the following commands:
+
+    createdb attendance_system
+
+    psql attendance_system < database/schema.sql
+
+    psql attendance_system < database/seed.sql
+
+The first command creates the local `attendance_system` database.
+
+The second command creates all tables, relationships, constraints, and custom types.
+
+The third command inserts the predefined development/test data.
+
+Your local database is now ready.
+
+To verify the database, run:
+
+    psql attendance_system
+
+Then inside PostgreSQL:
+
+    \dt
+
+You should see all the database tables.
+
+Each developer must perform this setup on their own machine. The actual PostgreSQL database is not stored or synchronized through GitHub. GitHub contains `schema.sql` and `seed.sql`, which are used to create the same database locally for every developer.
+
+
+
+# Sharing Database Changes Using `changes.sql`
+
+Use `changes.sql` when you make specific changes to the data in your local database and want another team member to apply those same changes to their existing database.
+
+## Teammate Making the Changes
+
+### 1. Create `changes.sql`
+
+Inside the `database` folder, create:
+
+    database/
+    ├── schema.sql
+    ├── seed.sql
+    └── changes.sql
+
+### 2. Add the Database Changes
+
+Put the required SQL statements inside `changes.sql`.
+
+For example, to update a student's data:
+
+    UPDATE users
+    SET name = 'New Name'
+    WHERE id = 15;
+
+For multiple changes:
+
+    UPDATE users
+    SET name = 'New Name'
+    WHERE id = 15;
+
+    UPDATE users
+    SET name = 'Another Name'
+    WHERE id = 20;
+
+### 3. Test the Changes Locally
+
+Make sure the SQL statements work correctly on your local database before sharing them.
+
+    psql attendance_system < database/changes.sql
+
+Check the data:
+
+    psql attendance_system
+
+    SELECT * FROM users;
+
+### 4. Commit the Changes
+
+Check the files:
+
+    git status
+
+Add the changes:
+
+    git add database/changes.sql
+
+Commit:
+
+    git commit -m "Add database changes"
+
+### 5. Push to GitHub
+
+Push the changes to your branch:
+
+    git push origin <your-branch>
+
+## Team Member Receiving the Changes
+
+### 6. Get the Changes from GitHub
+
+From the project root:
+
+    git fetch origin
+
+Then pull the branch containing the changes:
+
+    git pull origin <teammate-branch>
+
+### 7. Apply the Changes to Your Existing Database
+
+Do NOT drop or recreate your database.
+
+Run:
+
+    psql attendance_system < database/changes.sql
+
+This executes the SQL statements in `changes.sql` against your existing local database.
+
+### 8. Verify the Changes
+
+Connect to PostgreSQL:
+
+    psql attendance_system
+
+Then check the affected data:
+
+    SELECT * FROM users;
+
+The changes are now applied to your local database.
+
+## Important
+
+`changes.sql` contains the SQL commands needed to reproduce the specific changes. It does not contain or synchronize the actual PostgreSQL database.
+
+For database schema changes, use the appropriate schema/migration approach instead of using `changes.sql` for regular data updates.
+
+For example:
+
+    Data change       → changes.sql
+    Schema change     → schema.sql / migration file
+
+Do not commit the actual PostgreSQL database to GitHub.
