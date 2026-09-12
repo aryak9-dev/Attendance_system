@@ -15,6 +15,7 @@ CREATE TYPE week_day AS ENUM (
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
+    registration_number VARCHAR(50) UNIQUE,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(150) UNIQUE,
     password_hash VARCHAR(255),

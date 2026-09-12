@@ -36,11 +36,12 @@ erDiagram
 
     USERS {
         INT id PK
+        VARCHAR registration_number UK
         VARCHAR name
         VARCHAR email
         VARCHAR password_hash
         ENUM role
-        VARCHAR profile_photo
+        BYTEA profile_photo
         TIMESTAMP created_at
     }
 
@@ -140,11 +141,12 @@ A user can have one of two roles:
 | Column | Type | Key | Purpose |
 |---|---|---|---|
 | `id` | INT | PK | Unique user ID |
+| `registration_number` | VARCHAR(50) | Unique | Unique registration number (`STU001`, `STU002`... for students and `FAC001`, `FAC002`... for teachers) |
 | `name` | VARCHAR | | User's name |
 | `email` | VARCHAR | Optional/Unique later | Login/contact email |
 | `password_hash` | VARCHAR | | Hashed password; not required during initial seeded testing |
 | `role` | ENUM | | `student` or `teacher` |
-| `profile_photo` | VARCHAR | Optional | Photo used for profile/dashboard display |
+| `profile_photo` | BYTEA | Optional | Photo used for profile/dashboard display |
 | `created_at` | TIMESTAMP | | Account creation time |
 
 ### Example
