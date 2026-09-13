@@ -30,13 +30,21 @@ Returns a list of users.
 
 Can be used by teachers/admin functionality to view students or teachers.
 
-### Get User
+### Get User by id 
 
 ```text
 GET /users/{user_id}
 ```
 
 Returns information about a specific user.
+
+### Get User by Registration Number
+
+```text
+GET /users/registration/{registration_number}
+```
+
+Returns information about a specific user using registration number.
 
 ### Update User
 
@@ -295,6 +303,7 @@ The exact AI implementation will be handled inside `services/face_recognition.py
 USERS
 POST   /users
 GET    /users
+GET /users/registration/{registration_number}
 GET    /users/{user_id}
 PUT    /users/{user_id}
 
